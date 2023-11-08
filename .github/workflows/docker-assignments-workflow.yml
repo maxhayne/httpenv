@@ -15,9 +15,9 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-     pull-requests: write # need permission write comments during pull requests
+      pull-requests: write # need permission write comments during pull requests
 
-      steps:
+    steps:
 
       # Set up QEMU for multi-platform builds ie Intel, Arm, etc.
       - name: Set up QEMU
