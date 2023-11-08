@@ -14,8 +14,9 @@ jobs:
     name: Build Docker
     runs-on: ubuntu-latest
 
+    # This is necessary if you want to use peter-evans/find-comment@v2 or /create-or-update-comment@v3
     permissions:
-      pull-requests: write # need permission write comments during pull requests
+      pull-requests: write # need permission to write comments during pull requests
 
     steps:
 
@@ -58,6 +59,14 @@ jobs:
           cache-from: type=gha # Corresponds to Buildx step
           cache-to: type=gha,mode=max # Corresponds to Buildx step
           platforms: linux/amd64, linux/arm64, linux/arm/v7 # Corresponds to QEMU step
+
+      # Running CVE scan using Trivy
+      - name: Run Trivy for all CVE's (non-blocking because exit-code is 0)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ github.run_id }} # short, unique id
+          exit-code: 0
+          format: table
 
       # If a pull request, put image tags in the PR comments
       - name: Find comment for image tags
