@@ -13,7 +13,11 @@ jobs:
   build-image:
     name: Build Docker
     runs-on: ubuntu-latest
-    steps:
+
+     permissions:
+      pull-requests: write # need permission write comments during pull requests
+
+      steps:
 
       # Set up QEMU for multi-platform builds ie Intel, Arm, etc.
       - name: Set up QEMU
@@ -53,4 +57,34 @@ jobs:
           labels: ${{ steps.docker_meta.outputs.labels }} # Corresponds to Docker meta step
           cache-from: type=gha # Corresponds to Buildx step
           cache-to: type=gha,mode=max # Corresponds to Buildx step
-          platforms: linux/amd64, linux/arm64, linux/arm/v7 # Corresponds to QEMU step 
+          platforms: linux/amd64, linux/arm64, linux/arm/v7 # Corresponds to QEMU step
+
+      # If a pull request, put image tags in the PR comments
+      - name: Find comment for image tags
+        uses: peter-evans/find-comment@v2
+        if: github.event_name == 'pull-request'
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Docker image tag(s) pushed
+
+      # If a pull request, put image tags in the PR comments
+      - name: Create or update comment for image tags
+        uses: peter-evans/create-or-update-comment@v3
+        if: github.event_name == 'pull-request'
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Docker image tag(s) pushed:
+              '''text
+              ${{ steps.docker_meta.outputs.tags }}
+              '''
+
+              Labels added to images:
+              '''text
+              ${{ steps.docker_meta.outputs.labels }}
+              '''
+
+              edit-mode: replace
