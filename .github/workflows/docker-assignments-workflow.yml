@@ -37,4 +37,4 @@ jobs:
           tags: mhayne/httpenv-fork:latest
           cache-from: type=gha # Corresponds to Buildx step
           cache-to: type=gha,mode=max # Corresponds to Buildx step
-        platforms: linux/amd64, linux/arm64, linux/arm/v7 # Corresponds to QEMU step 
+          platforms: linux/amd64, linux/arm64, linux/arm/v7 # Corresponds to QEMU step 
