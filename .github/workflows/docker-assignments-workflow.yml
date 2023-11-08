@@ -1,0 +1,21 @@
+name: Github Actions for Docker
+run-name: ${{ github.actor }} is integrating Docker
+
+# Specifying under which circumstances this action will be performed
+on:
+  push:
+    branches:
+      - main
+  pull-request:
+
+# Specify the jobs to be performed for this workflow
+jobs:
+  build-image:
+    name: Build Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Dockerhub
+        uses: @docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
