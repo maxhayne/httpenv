@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - main
-  pull-request:
+  pull_request:
 
 # Specify the jobs to be performed for this workflow
 jobs:
