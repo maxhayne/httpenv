@@ -53,7 +53,9 @@ jobs:
       - name: Build on Docker
         uses: docker/build-push-action@v5
         with:
-          push: true
+          #push: true
+          push: false
+          load: true # Export to docker engine rather than pushing to the registry
           tags: ${{ github.run_id }}
           #tags: ${{ steps.docker_meta.outputs.tags }} # Corresponds to Docker meta step
           #labels: ${{ steps.docker_meta.outputs.labels }} # Corresponds to Docker meta step
